@@ -2,7 +2,7 @@ import Airtable from "airtable";
 import { resolveField } from "../config/clients.js";
 
 // Airtable-Client mit Personal Access Token initialisieren
-const airtable = new Airtable({ apiKey: process.env.AIRTABLE_PAT });
+const airtable = new Airtable({ apiKey: process.env.AT_TOKEN_STREIL });
 
 /**
  * Baut eine Airtable-Formel aus den übergebenen Suchparametern.
