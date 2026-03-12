@@ -42,6 +42,7 @@ export function formatProperties(records, client) {
   const fStandort = resolveField(client, "Standort");
   const fPreis = resolveField(client, "Preis");
   const fKategorie = resolveField(client, "Kategorie");
+  const fKurzbeschreibung = resolveField(client, "Kurzbeschreibung");
 
   const liste = top3.map((record, index) => {
     const felder = record.fields;
@@ -49,9 +50,11 @@ export function formatProperties(records, client) {
     const standort = felder[fStandort] ?? "Standort unbekannt";
     const preis = felder[fPreis];
     const kategorie = felder[fKategorie];
+    const kurzbeschreibung = felder[fKurzbeschreibung];
 
     const preisText = formatPreisMitLabel(kategorie, preis);
-    return `${index + 1}. ${titel} in ${standort}, ${preisText}.`;
+    const kurzText = kurzbeschreibung ? ` ${kurzbeschreibung}` : "";
+    return `${index + 1}. ${titel} in ${standort}, ${preisText}.${kurzText}`;
   });
 
   const anzahl = top3.length;
