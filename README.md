@@ -27,7 +27,7 @@ npm run dev
 1. Neues Projekt in Railway anlegen → "Deploy from GitHub repo"
 2. Repository verbinden
 3. Umgebungsvariablen in Railway eintragen (Settings → Variables):
-   - `AIRTABLE_PAT`
+   - `AT_TOKEN_STREIL`
    - `AT_BASE_STREIL` (und weitere Makler-Bases)
 4. Railway erkennt `npm start` automatisch aus `package.json`
 5. Nach dem Deploy: Health-Check testen

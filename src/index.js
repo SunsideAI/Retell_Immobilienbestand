@@ -10,8 +10,8 @@ app.use(express.json());
 const PORT = process.env.PORT ?? 3000;
 
 // Beim Start: fehlende Umgebungsvariablen loggen (kein Crash)
-if (!process.env.AIRTABLE_PAT) {
-  console.warn("[Warnung] AIRTABLE_PAT ist nicht gesetzt. Airtable-Anfragen werden fehlschlagen.");
+if (!process.env.AT_TOKEN_STREIL) {
+  console.warn("[Warnung] AT_TOKEN_STREIL ist nicht gesetzt. Airtable-Anfragen werden fehlschlagen.");
 }
 
 // ---------------------------------------------------------------------------
