@@ -20,6 +20,7 @@ function buildFormula(client, args) {
   const fPreis = resolveField(client, "Preis");
   const fTitel = resolveField(client, "Titel");
   const fBeschreibung = resolveField(client, "Beschreibung");
+  const fKurzbeschreibung = resolveField(client, "Kurzbeschreibung");
 
   // Kategorie: exakter Match (Groß-/Kleinschreibung ignorieren)
   if (args.kategorie) {
@@ -41,11 +42,11 @@ function buildFormula(client, args) {
     }
   }
 
-  // Suchbegriff: Freitext in Titel ODER Beschreibung (kein eigenes Zimmerfeld vorhanden)
+  // Suchbegriff: Freitext in Titel, Kurzbeschreibung ODER Beschreibung
   if (args.suchbegriff) {
     const begriff = args.suchbegriff.toLowerCase().replace(/"/g, "");
     conditions.push(
-      `OR(FIND(LOWER("${begriff}"), LOWER({${fTitel}})), FIND(LOWER("${begriff}"), LOWER({${fBeschreibung}})))`
+      `OR(FIND(LOWER("${begriff}"), LOWER({${fTitel}})), FIND(LOWER("${begriff}"), LOWER({${fKurzbeschreibung}})), FIND(LOWER("${begriff}"), LOWER({${fBeschreibung}})))`
     );
   }
 
