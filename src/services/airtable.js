@@ -42,12 +42,29 @@ function buildFormula(client, args) {
     }
   }
 
-  // Suchbegriff: Freitext in Titel, Kurzbeschreibung ODER Beschreibung
+  // Suchbegriff: Jedes Wort einzeln suchen (OR), damit "vier Zimmer" auch "4-Zimmer" trifft
   if (args.suchbegriff) {
-    const begriff = args.suchbegriff.toLowerCase().replace(/"/g, "");
-    conditions.push(
-      `OR(FIND(LOWER("${begriff}"), LOWER({${fTitel}})), FIND(LOWER("${begriff}"), LOWER({${fKurzbeschreibung}})), FIND(LOWER("${begriff}"), LOWER({${fBeschreibung}})))`
-    );
+    const zahlwoerter = { "ein": "1", "zwei": "2", "drei": "3", "vier": "4", "fünf": "5",
+      "sechs": "6", "sieben": "7", "acht": "8", "neun": "9", "zehn": "10" };
+
+    // Begriffe normalisieren: Zahlwörter durch Ziffern ergänzen
+    const roherBegriff = args.suchbegriff.toLowerCase().replace(/"/g, "");
+    const woerter = new Set(roherBegriff.split(/\s+/).filter(w => w.length > 2));
+    for (const [wort, ziffer] of Object.entries(zahlwoerter)) {
+      if (roherBegriff.includes(wort)) woerter.add(ziffer);
+    }
+
+    const suchBedingungen = [];
+    for (const wort of woerter) {
+      const w = wort.replace(/"/g, "");
+      suchBedingungen.push(`FIND(LOWER("${w}"), LOWER({${fTitel}}))`);
+      suchBedingungen.push(`FIND(LOWER("${w}"), LOWER({${fKurzbeschreibung}}))`);
+      suchBedingungen.push(`FIND(LOWER("${w}"), LOWER({${fBeschreibung}}))`);
+    }
+
+    if (suchBedingungen.length > 0) {
+      conditions.push(`OR(${suchBedingungen.join(", ")})`);
+    }
   }
 
   // Mehrere Bedingungen mit AND() verknüpfen, sonst keine Formel (alle Objekte)
