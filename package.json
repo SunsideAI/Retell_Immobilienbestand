@@ -1,0 +1,15 @@
+{
+  "name": "retell-immobilien-api",
+  "version": "1.0.0",
+  "description": "Multi-Makler Immobiliensuche API für Retell AI Voice Agents",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "airtable": "^0.12.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
