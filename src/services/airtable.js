@@ -58,7 +58,7 @@ function buildFormula(client, args) {
 
     // Begriffe normalisieren: Zahlwörter durch Ziffern ergänzen
     const roherBegriff = args.suchbegriff.toLowerCase().replace(/"/g, "");
-    const woerter = new Set(roherBegriff.split(/\s+/).filter(w => w.length > 2));
+    const woerter = new Set(roherBegriff.split(/\s+/).filter(w => w.length > 3));
     for (const [wort, ziffer] of Object.entries(zahlwoerter)) {
       if (roherBegriff.includes(wort)) woerter.add(ziffer);
     }

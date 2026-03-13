@@ -50,7 +50,19 @@ app.post("/search", async (req, res) => {
   }
 
   try {
-    const records = await searchProperties(client, suchArgs);
+    let records = await searchProperties(client, suchArgs);
+
+    // Fallback 1: standort + suchbegriff → nur suchbegriff (Standort-Filter lockern)
+    if (records.length === 0 && suchArgs.standort && suchArgs.suchbegriff) {
+      console.log("[Search] Fallback 1: Suche ohne Standort-Filter");
+      records = await searchProperties(client, { ...suchArgs, standort: null });
+    }
+
+    // Fallback 2: nur suchbegriff → nur standort
+    if (records.length === 0 && suchArgs.standort) {
+      console.log("[Search] Fallback 2: Suche nur nach Standort");
+      records = await searchProperties(client, { ...suchArgs, suchbegriff: null });
+    }
 
     if (records.length === 0) {
       return res.json({ result: noResults() });
