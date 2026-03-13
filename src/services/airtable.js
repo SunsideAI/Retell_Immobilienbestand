@@ -21,6 +21,7 @@ function buildFormula(client, args) {
   const fTitel = resolveField(client, "Titel");
   const fBeschreibung = resolveField(client, "Beschreibung");
   const fKurzbeschreibung = resolveField(client, "Kurzbeschreibung");
+  const fExposé = resolveField(client, "ExposéNr");
 
   // Kategorie: exakter Match (Groß-/Kleinschreibung ignorieren)
   if (args.kategorie) {
@@ -28,10 +29,18 @@ function buildFormula(client, args) {
     conditions.push(`LOWER({${fKategorie}}) = LOWER("${kat}")`);
   }
 
-  // Standort: Teilstring-Suche (matcht PLZ + Ort in einem Feld)
+  // Standort: Wort-für-Wort-Suche (OR) – damit "Lauingen an der Donau" auch "Lauingen" trifft
   if (args.standort) {
-    const ort = args.standort.toLowerCase().replace(/"/g, "");
-    conditions.push(`FIND(LOWER("${ort}"), LOWER({${fStandort}}))`);
+    const stopWords = new Set(["an", "am", "im", "in", "der", "die", "das", "bei", "von", "und"]);
+    const ortWoerter = args.standort
+      .toLowerCase()
+      .replace(/"/g, "")
+      .split(/\s+/)
+      .filter(w => w.length > 2 && !stopWords.has(w));
+    if (ortWoerter.length > 0) {
+      const ortBedingungen = ortWoerter.map(w => `FIND(LOWER("${w}"), LOWER({${fStandort}}))`);
+      conditions.push(ortBedingungen.length === 1 ? ortBedingungen[0] : `OR(${ortBedingungen.join(", ")})`);
+    }
   }
 
   // Maximalpreis: numerischer Vergleich
@@ -60,6 +69,7 @@ function buildFormula(client, args) {
       suchBedingungen.push(`FIND(LOWER("${w}"), LOWER({${fTitel}}))`);
       suchBedingungen.push(`FIND(LOWER("${w}"), LOWER({${fKurzbeschreibung}}))`);
       suchBedingungen.push(`FIND(LOWER("${w}"), LOWER({${fBeschreibung}}))`);
+      suchBedingungen.push(`FIND(LOWER("${w}"), LOWER({${fExposé}}))`);
     }
 
     if (suchBedingungen.length > 0) {

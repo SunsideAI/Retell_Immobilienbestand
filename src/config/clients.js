@@ -5,7 +5,9 @@ export const CLIENTS = {
   streil: {
     baseId: process.env.AT_BASE_STREIL,
     table: "Table 1",
-    // Keine fields-Angabe → Standardfeldnamen werden verwendet
+    fields: {
+      ExposéNr: "Objektnummer",
+    },
   },
 
   // Beispiel für einen Makler mit abweichenden Feldnamen:
